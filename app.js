@@ -189,25 +189,39 @@ function render() {
     el.stats.appendChild(card);
   });
 
-  el.scanTableBody.innerHTML = state.events
-    .map((e) => {
-      const status = e.isDuplicate ? "Duplicate" : e.isInMaster ? "Valid" : "Mismatch";
-      const statusClass = e.isDuplicate ? "warn" : e.isInMaster ? "ok" : "bad";
-      return `<tr>
-        <td>${new Date(e.scannedAt).toLocaleString()}</td>
-        <td>${e.station}</td>
-        <td>${e.empNo}</td>
-        <td>${e.name}</td>
-        <td>${e.gender}</td>
-        <td class="${statusClass}">${status}</td>
-      </tr>`;
-    })
-    .join("");
+  el.scanTableBody.innerHTML = "";
+  state.events.forEach((e) => {
+    const row = document.createElement("tr");
+    const status = e.isDuplicate ? "Duplicate" : e.isInMaster ? "Valid" : "Mismatch";
+    const statusClass = e.isDuplicate ? "warn" : e.isInMaster ? "ok" : "bad";
+    [
+      new Date(e.scannedAt).toLocaleString(),
+      e.station,
+      e.empNo,
+      e.name,
+      e.gender
+    ].forEach((value) => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+    const statusCell = document.createElement("td");
+    statusCell.className = statusClass;
+    statusCell.textContent = status;
+    row.appendChild(statusCell);
+    el.scanTableBody.appendChild(row);
+  });
 
-  el.inactiveTableBody.innerHTML = inactive
-    .slice(0, 500)
-    .map((e) => `<tr><td>${e.empNo}</td><td>${e.name}</td><td>${e.gender}</td></tr>`)
-    .join("");
+  el.inactiveTableBody.innerHTML = "";
+  inactive.slice(0, 500).forEach((e) => {
+    const row = document.createElement("tr");
+    [e.empNo, e.name, e.gender].forEach((value) => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+    el.inactiveTableBody.appendChild(row);
+  });
 }
 
 async function connectRealtime() {
