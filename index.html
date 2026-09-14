@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Registration System</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <img src="assets/company-logo.svg" alt="Company logo" class="logo" />
+      <div>
+        <h1>Employee Registration System</h1>
+        <p>Realtime barcode registration dashboard</p>
+      </div>
+    </header>
+
+    <section class="config card">
+      <h2>System Setup</h2>
+      <div class="grid">
+        <label>Station Name
+          <input id="stationName" type="text" placeholder="Station-01" />
+        </label>
+        <label>Master CSV
+          <input id="masterCsv" type="file" accept=".csv,text/csv" />
+        </label>
+      </div>
+      <details>
+        <summary>Realtime Sync (recommended for 12 stations)</summary>
+        <div class="grid">
+          <label>Supabase URL
+            <input id="supabaseUrl" type="text" placeholder="https://YOUR-PROJECT.supabase.co" />
+          </label>
+          <label>Supabase Anon Key
+            <input id="supabaseKey" type="password" placeholder="Paste anon public key" />
+          </label>
+        </div>
+        <div class="actions">
+          <button id="connectRealtime" type="button">Connect Realtime</button>
+        </div>
+      </details>
+      <p id="status" class="status">Local mode active. Upload master CSV to begin scanning.</p>
+    </section>
+
+    <section class="scanner card">
+      <h2>Barcode Scan</h2>
+      <label>Scan / Enter Employee ID
+        <input id="scanInput" type="text" placeholder="Scan barcode here" autocomplete="off" />
+      </label>
+      <small>Tip: barcode scanners usually auto-submit with Enter.</small>
+    </section>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="tables">
+      <article class="card">
+        <h2>Live Scan Records</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Station</th>
+                <th>EMP_NO</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="scanTableBody"></tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Inactive Employees (not scanned yet)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>EMP_NO</th>
+                <th>Name</th>
+                <th>Gender</th>
+              </tr>
+            </thead>
+            <tbody id="inactiveTableBody"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
