@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Registration System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="bg"></div>
+    <main class="container">
+      <header class="card title-card">
+        <h1>Employee Registration System</h1>
+        <p>Barcode-based employee registration with live counts and duplicate detection.</p>
+      </header>
+
+      <section class="card config-card">
+        <h2>Cloud Sync (for 12 stations)</h2>
+        <p>Enter the same Supabase project details on every laptop.</p>
+        <div class="form-grid">
+          <label>
+            Supabase URL
+            <input id="supabaseUrl" type="text" placeholder="https://xxxx.supabase.co" />
+          </label>
+          <label>
+            Supabase Anon Key
+            <input id="supabaseAnonKey" type="password" placeholder="eyJ..." />
+          </label>
+          <label>
+            Station ID
+            <input id="stationId" type="text" placeholder="Station-01" />
+          </label>
+        </div>
+        <div class="actions">
+          <button id="connectBtn" class="btn btn-primary">Connect Cloud Sync</button>
+          <button id="disconnectBtn" class="btn btn-muted" type="button">Use Local Mode</button>
+          <span id="syncStatus" class="status-pill warning">Not Connected</span>
+        </div>
+      </section>
+
+      <section class="card scanner-card">
+        <h2>Scan Employee ID</h2>
+        <form id="scanForm" autocomplete="off">
+          <input
+            id="barcodeInput"
+            type="text"
+            placeholder="Scan barcode or type employee number"
+            autofocus
+          />
+          <button class="btn btn-primary" type="submit">Register</button>
+        </form>
+        <small>Tip: Barcode readers normally auto-type ID + Enter.</small>
+      </section>
+
+      <section class="card upload-card">
+        <h2>Master Database Upload (CSV)</h2>
+        <p>Required columns: <code>EMP_NO</code>, <code>EMP_NAME</code>, <code>Gender</code>. Optional: <code>Status</code> (inactive detection).</p>
+        <div class="actions">
+          <input id="masterCsvInput" type="file" accept=".csv,text/csv" />
+          <button id="exportBtn" class="btn btn-secondary" type="button">Export Records CSV</button>
+        </div>
+        <p id="masterInfo">No master CSV loaded.</p>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat card"><h3>Total Scans</h3><p id="totalScans">0</p></article>
+        <article class="stat card"><h3>Registered (Unique)</h3><p id="uniqueCount">0</p></article>
+        <article class="stat card"><h3>Duplicates</h3><p id="duplicateCount">0</p></article>
+        <article class="stat card"><h3>Male</h3><p id="maleCount">0</p></article>
+        <article class="stat card"><h3>Female</h3><p id="femaleCount">0</p></article>
+        <article class="stat card"><h3>Inactive</h3><p id="inactiveCount">0</p></article>
+        <article class="stat card"><h3>Mismatches</h3><p id="mismatchCount">0</p></article>
+      </section>
+
+      <section class="card charts-card">
+        <h2>Live Charts</h2>
+        <div class="charts-grid">
+          <canvas id="registrationChart"></canvas>
+          <canvas id="genderChart"></canvas>
+        </div>
+      </section>
+
+      <section class="card table-card">
+        <h2>Scanned Records</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Time</th>
+                <th>Station</th>
+                <th>Employee No</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Status</th>
+                <th>Event</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
